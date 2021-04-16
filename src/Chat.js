@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import classes from './Chat.module.css'
 
 const ENDPOINT = "http://localhost:3001/";
 let server = io(ENDPOINT);
@@ -13,20 +14,18 @@ const Chat = ({userData,isError}) => {
 
   useEffect(() => {
     ref.current.focus();
+
     if(userData){
-        console.log(userData);
         server.emit('join', userData, (error)=>{
             alert(error)
             isError()
-            server.on("welcome", (greeting) => {
-                console.log(greeting);
-              setWelcome(greeting.text)
-            });
-    
-        })
+        }) 
         
+        server.on("welcome", (greeting) => {
+          console.log(greeting);
+          setWelcome(greeting.text)
+        });
     }
-    
 
     server.on("message", (message) => {
         
@@ -83,7 +82,6 @@ const Chat = ({userData,isError}) => {
   return (
     <div>
       <h1> Chat </h1>
-      {weleome && <h2> {weleome} </h2> }
       <input
         ref={ref}
         value={message}
@@ -93,6 +91,7 @@ const Chat = ({userData,isError}) => {
 
       <button onClick={click}> Click </button>
       <br />
+      {weleome && <h2> {weleome} </h2> }
       {messages.map((msg, index) => {
         return (
           <div key={index}>

@@ -21,12 +21,13 @@ const server = app.listen(port, () => {
 
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", // client
     methods: ["GET", "POST"],
   },
 });
 
 io.on("connection", (socket) => {
+
   socket.on("join", ({ name, room }, cb) => {
     
     const {error, user} = addUser({id:socket.id,name: name,room: room})
@@ -35,8 +36,8 @@ io.on("connection", (socket) => {
     }
 
     socket.join(user.room);
-    socket.to(user.room).emit("welcome", sendMessage("Welcome to the chat application"));
-    socket.to(user.room).broadcast.emit("welcome", sendMessage("New user join"));
+    socket.to(user.room).emit("welcome", sendMessage("Welcome " + user.user));
+    socket.to(user.room).broadcast.emit("welcome", sendMessage(user.name + ' joins'));
   });
 
   socket.on("send", (message, cb) => {
@@ -62,7 +63,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", sendMessage("user leave"));
+    const user = removeUser(socket.id)
+    console.log(user);
+    io.to(user.room).emit("message", sendMessage(`${user.name} left`, user.name));
   });
 });
 

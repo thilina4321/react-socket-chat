@@ -7,7 +7,6 @@ const App = () => {
   const [isHome, setIsHome] = useState(true);
 
   const onSubmitedData = useCallback((userData) => {
-    console.log(userData);
     setValue(userData);
     setIsHome(false);
   }, []);

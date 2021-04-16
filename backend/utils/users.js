@@ -34,7 +34,7 @@ const removeUser = (id)=>{
     }
 
     // remove user
-    return users.splice(id, 1)
+    return users.splice(id, 1)[0]
 }
 
 const getUser = (id)=>{
@@ -63,9 +63,9 @@ module.exports = {
     getUsersInRoom
 }
 
-console.log(addUser({id:1, name:'thilina', room:'r2'}));
-console.log(addUser({id:2, name:'dilshan', room:'r2'}));
+// console.log(addUser({id:1, name:'thilina', room:'r2'}));
+// console.log(addUser({id:2, name:'dilshan', room:'r2'}));
 
-// console.log(removeUser(2));
-console.log(getUser(1));
-console.log(getUsersInRoom('r2'));
+// // console.log(removeUser(2));
+// console.log(getUser(1));
+// console.log(getUsersInRoom('r2'));
