@@ -1,106 +1,41 @@
-import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
-import classes from './Chat.module.css'
+import React, { useRef, useState } from "react";
+import { useEffect } from "react";
+import classes from './chat.module.css'
 
-const ENDPOINT = "http://localhost:3001/";
-let server = io(ENDPOINT);
+const Chat = () => {
 
-const Chat = ({userData,isError}) => {
-  const [weleome, setWelcome] = useState("");
-  const [message, setMessage] = useState("");
+  const messageEl = useRef()
+  const messageRef = useRef()
   const [messages, setMessages] = useState([]);
-  const ref = useRef();
-
 
   useEffect(() => {
-    ref.current.focus();
-
-    if(userData){
-        server.emit('join', userData, (error)=>{
-            alert(error)
-            isError()
-        }) 
-        
-        server.on("welcome", (greeting) => {
-          console.log(greeting);
-          setWelcome(greeting.text)
-        });
-    }
-
-    server.on("message", (message) => {
-        
-      if(message){
-          console.log(message);
-        setMessages(preMsgs=>[...preMsgs, {text: message.text, user:message.user, time: message.createdAt}]);
-
-      }
-      
-    });
-
-    server.on("location", (message) => {
-      if(message){
-        setMessages(preMsgs=>[...preMsgs, {text: <a href={message.location}
-             target="__blank"> My location </a>
-          , time: message.createdAt,
-          user:message.user
-        }]);
-
-      }
-      
-    });
-    
-  },[userData,isError]);
-
-  const click = () => {
-    server.emit("send", message, () => {
-      console.log("deliverd");
-      
-    });
-    
-    
-    setMessage("");
-    // console.log(messages);
-  };
-
-  const location = () => {
-    let latitude;
-    let longitude;
-    if (!navigator.geolocation) {
-      return alert("Sorry location is unavalible at the movement");
-    }
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      latitude = position.coords.longitude;
-      longitude = position.coords.latitude;
-
-      server.emit("sendLocation", { latitude, longitude }, () => {
-        console.log("location shared");
+    if (messageEl) {
+      messageEl.current.addEventListener('DOMNodeInserted', event => {
+        const { currentTarget: target } = event;
+        target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
       });
-    });
-  };
+    }
+  }, [])
+
+  const addMessages = ()=>{
+    let message = messageRef.current.value
+    console.log(message);
+    setMessages((prev)=>{
+      return [...prev, message]
+    })
+  }
 
   return (
-    <div>
-      <h1> Chat </h1>
-      <input
-        ref={ref}
-        value={message}
-        autoComplete="false"
-        onChange={(e) => setMessage(e.target.value)}
-      />
-
-      <button onClick={click}> Click </button>
-      <br />
-      {weleome && <h2> {weleome} </h2> }
-      {messages.map((msg, index) => {
-        return (
-          <div key={index}>
-            {msg.user} - {msg.time}
-            <p> {msg.text} </p>
-          </div>
-        );
-      })}
-      <button onClick={location}> Location </button>
+    <div className={classes.chat}>
+      <div className={classes.names} > chat </div>
+      <div className={classes.room} > 
+      <div ref={messageEl}>
+      {messages.map((message, index)=> <p key={index}> {message} </p> )}
+      </div>
+       
+      <input ref={messageRef}  />
+      <button onClick={addMessages}> Ok </button>
+       </div>
     </div>
   );
 };

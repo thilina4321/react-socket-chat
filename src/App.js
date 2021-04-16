@@ -1,23 +1,28 @@
-import React, { useCallback, useState } from "react";
-import Home from "./Home";
-import Chat from "./Chat";
+import React, { useCallback } from "react";
+import Chat from "./chat";
+import Register from "./register";
 
 const App = () => {
-  const [value, setValue] = useState({});
-  const [isHome, setIsHome] = useState(true);
 
-  const onSubmitedData = useCallback((userData) => {
-    setValue(userData);
-    setIsHome(false);
-  }, []);
+  const submit = useCallback(({name, room})=>{
+    console.log(name, room);
+  }, [])
 
-  const onIsError = useCallback(()=>{
-    setIsHome(true)
-  },[])
-
+  // <Register submit={submit}/>
   return (
-    <div>{isHome ? <Home submitedData={onSubmitedData} /> : 
-    <Chat isError={onIsError} userData={value}/>}</div>
+    <div
+      style={{
+        width:'100%',
+        height: "100vh",
+        backgroundColor: "black",
+        color: "white",
+        margin: "0",
+        padding: "0",
+        boxSizing: "border-box",
+      }}
+    >
+      <Chat />
+    </div>
   );
 };
 
