@@ -2,6 +2,9 @@
     display: flex;
     width: 100%;
     color: white;
+    background-color: black;
+    height: 80%;
+    
 }
 
 .names{
@@ -13,23 +16,25 @@
 .room{
     flex: 0.7;
     position: relative;
-    height: 100vh;
+    height: 100%;
     width: 100%;
 }
 
 .room input{
-    position: absolute;
+    position: fixed;
     top: 90%;
     width: 80%;
     height: 30px;
+    z-index: 2;
 }
 
 .room button{
     padding: 7px;
     border-radius: 5px;
     border: 1px solid white;
-    position: absolute;
+    position: fixed;
     top: 90%;
     left: 83%;
     width: 13%;
+    z-index: 2;
 }
